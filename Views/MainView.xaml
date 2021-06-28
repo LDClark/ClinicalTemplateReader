@@ -4,7 +4,6 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="{Binding Title}" Height="525" Width="525"
         WindowStartupLocation="CenterScreen" Background="#FF343434">
     <Window.Resources>
@@ -19,11 +18,6 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <CollectionViewSource x:Key="PlansInCourse" Source="{Binding PlansInCourse}">
-            <CollectionViewSource.SortDescriptions>
-                <cm:SortDescription PropertyName="Id" Direction="Descending"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource x:Key="RxsInCourse" Source="{Binding RxsInCourse}">
             <CollectionViewSource.SortDescriptions>
                 <cm:SortDescription PropertyName="Id" Direction="Descending"/>
             </CollectionViewSource.SortDescriptions>
@@ -55,11 +49,6 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding GetTemplatesCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
     <StackPanel>
         <Grid>
             <!--Row and column definitions (2x2 grid)-->
@@ -91,16 +80,12 @@
                     Width="300" 
                     Height="80"  
                     Margin="15,15,10,15" 
+                    IsSynchronizedWithCurrentItem="False"
                     ItemsSource="{Binding Source={StaticResource Templates}}"
                     SelectedItem="{Binding SelectedTemplate, NotifyOnSourceUpdated=True}"
                     Background="Black"
                     Foreground="White"
                     >
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SourceUpdated">
-                        <i:InvokeCommandAction Command="{Binding GetTemplatesCommand}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Preview.ID}" />
@@ -108,26 +93,17 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <ListBox
+                    x:Name="selectedRx"
                     Grid.Column="1" 
                     Grid.Row="1" 
                     Width="300" 
                     Height="80"  
                     Margin="15,15,10,15" 
-                    ItemsSource="{Binding Source={StaticResource RxsInCourse}}"
+                    ItemsSource="{Binding RxIdsInCourse}"
                     SelectedItem="{Binding SelectedRx, NotifyOnSourceUpdated=True}"
                     Background="Black"
                     Foreground="White"
                     >
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SourceUpdated">
-                        <i:InvokeCommandAction Command="{Binding GetRxsCommand}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding IdWithDetails}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
             </ListBox>
             <TextBox
                 Text="{Binding DosePerFraction}"
@@ -140,7 +116,7 @@
                 Foreground="White"
                 />
             <TextBox
-                Text="{Binding NumberFractions}"
+                Text="{Binding Fractions}"
                 Grid.Column="1" 
                 Grid.Row="3" 
                 Width="40" 
